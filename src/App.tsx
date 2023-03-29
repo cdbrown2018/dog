@@ -1,23 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
+import Button from "./Button";
+import Alert from "./Alert";
+import Image from "./Image";
+import axios from "axios";
 
 function App() {
+  const [visible, setVisibility] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [count, setCount] = useState(0);
+  function handleClick() {
+    axios.get("https://dog.ceo/api/breeds/image/random").then((res) => {
+      setImageUrl(res.data.message);
+      setCount(count + 1);
+    });
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+        {visible && (
+          <Alert type="info" onDismiss={() => setVisibility(false)}>
+            I'm a dog ({count})
+          </Alert>
+        )}
+        {imageUrl && <Image imageUrl={imageUrl} altText="My beautiful dog" />}
+        <Button
+          type="success"
+          onClick={() => {
+            setVisibility(true);
+            handleClick();
+          }}
         >
-          Learn React
-        </a>
+          CLICK ME
+        </Button>
       </header>
     </div>
   );
