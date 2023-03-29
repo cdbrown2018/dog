@@ -9,12 +9,12 @@ import axios from "axios";
 function App() {
   const [visible, setVisibility] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
-  const [count, setCount] = useState(0);
-  function handleClick() {
-    axios.get("https://dog.ceo/api/breeds/image/random").then((res) => {
-      setImageUrl(res.data.message);
-      setCount(count + 1);
-    });
+  const [breed, setBreed] = useState("");
+  async function handleClick() {
+    const res = await axios.get("https://dog.ceo/api/breeds/image/random");
+    setImageUrl(res.data.message);
+    const breed = res.data.message.split("/")[4].replace("-", " ");
+    setBreed(breed);
   }
 
   return (
@@ -22,7 +22,7 @@ function App() {
       <header className="App-header">
         {visible && (
           <Alert type="info" onDismiss={() => setVisibility(false)}>
-            I'm a dog ({count})
+            I'm a {breed}.
           </Alert>
         )}
         {imageUrl && <Image imageUrl={imageUrl} altText="My beautiful dog" />}
